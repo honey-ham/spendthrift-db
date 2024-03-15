@@ -5,6 +5,9 @@
 #
 # './dev.sh' and './dev.sh up' will try to create the postgres container
 # './dev.sh down' will try to tear down the container
+#
+# DO NOT RUN WITH SUDO... Just since $(whoami) will say root rather
+# than your username. You will still need sudo priv to run this successfully
 
 # Constants
 USERNAME=$(whoami)
@@ -34,7 +37,7 @@ if [[ $(sudo docker container ls -qf name="^${CONTAINER_NAME}$") ]]; then
 fi
 
 # Checking if the postgresql/data directory exists...
-# If they don't I'll make them. This holds all of the postgresql files
+# If it doesn't I'll make them. This holds all of the postgresql files
 if ! [[ -d "./postgresql" ]]; then
     mkdir ./postgresql
 fi
