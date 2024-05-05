@@ -56,5 +56,6 @@ sudo docker run --name ${CONTAINER_NAME} \
 -e POSTGRES_USER=${USERNAME} \
 -e POSTGRES_PASSWORD=${PASSWORD} \
 -e POSTGRES_DB=${PROJECT_NAME} \
+-p 5432:5432 \
 --rm -d "${POSTGRES_IMG_NAME}:${POSTGRES_IMG_VERSION}"
 sudo docker exec -it ${CONTAINER_NAME} /bin/bash
