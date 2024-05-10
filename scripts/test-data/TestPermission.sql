@@ -1,0 +1,2 @@
+INSERT INTO permission(name, description) VALUES('superuser', 'Maximum access. No restrictions');
+INSERT INTO permission(name, description) VALUES('normie', 'Normal access. Can only read/manipulate entries related to their own account');

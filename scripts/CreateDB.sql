@@ -1,3 +1,9 @@
+CREATE TABLE IF NOT EXISTS permission(
+    id UUID     PRIMARY KEY DEFAULT gen_random_uuid(),
+    name        VARCHAR(255) UNIQUE NOT NULL,
+    description VARCHAR(255)
+);
+
 CREATE TABLE IF NOT EXISTS user_account(
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     first_name  VARCHAR(255) NOT NULL, 
@@ -5,6 +11,7 @@ CREATE TABLE IF NOT EXISTS user_account(
     email       VARCHAR(255) UNIQUE NOT NULL,
     username    VARCHAR(255) UNIQUE NOT NULL,
     password    VARCHAR(255) NOT NULL,
+    permission_id UUID REFERENCES permission(id) NOT NULL,
     -- Verified true when email is verified
     is_verified BOOLEAN NOT NULL DEFAULT FALSE,
     -- Unix timestamp
@@ -20,15 +27,11 @@ CREATE TABLE IF NOT EXISTS user_session (
     user_id    UUID REFERENCES user_account(id) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS permission(
-    id UUID     PRIMARY KEY DEFAULT gen_random_uuid(),
-    name        VARCHAR(255) UNIQUE NOT NULL,
-    description VARCHAR(255)
-);
-
-CREATE TABLE IF NOT EXISTS user_permissions(
-    permission_id UUID REFERENCES permission(id) NOT NULL,
-    user_id       UUID REFERENCES user_account(id) NOT NULL
+CREATE TABLE IF NOT EXISTS label(
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name        VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    user_id     UUID REFERENCES user_account(id) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS purchase(
@@ -37,7 +40,8 @@ CREATE TABLE IF NOT EXISTS purchase(
     description VARCHAR(255),
     cost        NUMERIC(15,3) NOT NULL,
     date        TIMESTAMPTZ NOT NULL,
-    user_id     UUID REFERENCES user_account(id) NOT NULL
+    user_id     UUID REFERENCES user_account(id) NOT NULL,
+    label_id    UUID REFERENCES label(id) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS subscription(
@@ -48,24 +52,6 @@ CREATE TABLE IF NOT EXISTS subscription(
     start_date          TIMESTAMPTZ NOT NULL,
     days_btwn_purchases INTEGER NOT NULL,
     is_active           BOOLEAN DEFAULT true NOT NULL,
-    user_id             UUID REFERENCES user_account(id) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS label(
-    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name        VARCHAR(255) NOT NULL,
-    description VARCHAR(255),
-    user_id     UUID REFERENCES user_account(id) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS purchase_labels(
-    label_id    UUID REFERENCES label(id) NOT NULL,
-    purchase_id UUID REFERENCES purchase(id) NOT NULL,
-    PRIMARY KEY(label_id, purchase_id)
-);
-
-CREATE TABLE IF NOT EXISTS subscription_labels(
-    label_id    UUID REFERENCES label(id) NOT NULL,
-    purchase_id UUID REFERENCES purchase(id) NOT NULL,
-    PRIMARY KEY(label_id, purchase_id)
+    user_id             UUID REFERENCES user_account(id) NOT NULL,
+    label_id    UUID REFERENCES label(id) NOT NULL
 );
