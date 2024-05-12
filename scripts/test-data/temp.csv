@@ -1,0 +1,3 @@
+id, name, description
+d3548a5f-2bfc-49f0-92d1-31ea035b965f, superuser, Maximum access. No restrictions
+6d19c619-aedf-4328-9fdf-13a1c0d0051e, normie, Normal access. Can only read/manipulate entries related to their own account
