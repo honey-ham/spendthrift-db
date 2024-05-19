@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS user_account(
     -- Verified true when email is verified
     is_verified BOOLEAN NOT NULL DEFAULT FALSE,
     -- Unix timestamp
-    last_verification_attempt BIGINT,
+    last_verification_attempt TIMESTAMPTZ,
     -- Locked is true if admin locks the account
     is_locked   BOOLEAN NOT NULL DEFAULT FALSE
 );
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS user_account(
 CREATE TABLE IF NOT EXISTS user_session (
     -- Lucia auth wont allow the use of UUID type here
     id          TEXT PRIMARY KEY, 
-    expires_at  BIGINT NOT NULL,
+    expires_at  TIMESTAMPTZ NOT NULL,
     user_id    UUID REFERENCES user_account(id) NOT NULL
 );
 
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS purchase(
     name        VARCHAR(255) NOT NULL,
     description VARCHAR(255),
     cost        NUMERIC(15,3) NOT NULL,
-    date        BIGINT NOT NULL,
+    date        TIMESTAMPTZ NOT NULL,
     user_id     UUID REFERENCES user_account(id) NOT NULL,
     label_id    UUID REFERENCES label(id) NOT NULL
 );
@@ -49,9 +49,9 @@ CREATE TABLE IF NOT EXISTS subscription(
     name                VARCHAR(255) NOT NULL,
     description         VARCHAR(255),
     cost                NUMERIC(15,3) NOT NULL,
-    start_date          BIGINT NOT NULL,
+    start_date          TIMESTAMPTZ NOT NULL,
     days_btwn_purchases INTEGER NOT NULL,
     is_active           BOOLEAN DEFAULT true NOT NULL,
     user_id             UUID REFERENCES user_account(id) NOT NULL,
-    label_id    UUID REFERENCES label(id) NOT NULL
+    label_id            UUID REFERENCES label(id) NOT NULL
 );
